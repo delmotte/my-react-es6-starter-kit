@@ -57,5 +57,11 @@ module.exports = {
     entry: {
         app: `./${conf.path.src('index')}`,
         vendor: Object.keys(pkg.dependencies)
+    },
+    resolve: {
+        alias: {
+            'react': 'react-lite',
+            'react-dom': 'react-lite'
+        }
     }
 };
