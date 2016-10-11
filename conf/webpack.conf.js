@@ -5,10 +5,21 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const autoprefixer = require('autoprefixer');
 
-const Dashboard = require('webpack-dashboard');
-const DashboardPlugin = require('webpack-dashboard/plugin');
-const dashboard = new Dashboard();
+const plugins = [
+    new webpack.optimize.OccurrenceOrderPlugin(),
+    new webpack.NoErrorsPlugin(),
+    new HtmlWebpackPlugin({
+        template: conf.path.src('index.html')
+    }),
+    new webpack.HotModuleReplacementPlugin(),
+];
 
+if (process.env.NODE_ENV !== 'production') {
+    const Dashboard = require('webpack-dashboard');
+    const DashboardPlugin = require('webpack-dashboard/plugin');
+    const dashboard = new Dashboard();
+    plugins.push(new DashboardPlugin(dashboard.setData));
+}
 
 module.exports = {
     module: {
@@ -40,15 +51,7 @@ module.exports = {
             }
         ]
     },
-    plugins: [
-        new webpack.optimize.OccurrenceOrderPlugin(),
-        new webpack.NoErrorsPlugin(),
-        new HtmlWebpackPlugin({
-            template: conf.path.src('index.html')
-        }),
-        new webpack.HotModuleReplacementPlugin(),
-        new DashboardPlugin(dashboard.setData)
-    ],
+    plugins: plugins,
     postcss: () => [autoprefixer],
     debug: true,
     devtool: 'source-map',

@@ -1,5 +1,4 @@
 const gulp = require('gulp');
-const gutil = require('gulp-util');
 
 const webpack = require('webpack');
 const webpackConf = require('../conf/webpack.conf');
@@ -24,25 +23,22 @@ gulp.task('webpack:dist', done => {
 
 function webpackWrapper(watch, conf, done) {
     const webpackBundler = webpack(conf);
-    const dashboard = new Dashboard();
 
     const webpackChangeHandler = (err, stats) => {
         if (err) {
             gulpConf.errorHandler('Webpack')(err);
         }
-        /*gutil.log(stats.toString({
-            colors: true,
-            chunks: false,
-            hash: false,
-            version: false
-        }));*/
         if (done) {
             done();
             done = null;
         }
     };
 
-    webpackBundler.apply(new DashboardPlugin(dashboard.setData));
+    if (process.env.NODE_ENV !== 'production') {
+        const dashboard = new Dashboard();
+        webpackBundler.apply(new DashboardPlugin(dashboard.setData));
+    }
+
     if (watch) {
         webpackBundler.watch(200, webpackChangeHandler);
     } else {
