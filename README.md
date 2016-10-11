@@ -29,6 +29,6 @@ Using Webpack + ES6 + React + React Router
 
 # how to use it ?
 
-`git clone`
+`git clone` + `npm install`
 
 then, just launch `npm run serve` or `npm run build`
